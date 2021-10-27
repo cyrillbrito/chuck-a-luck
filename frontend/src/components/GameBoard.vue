@@ -1,5 +1,7 @@
 <template>
-  <div>Ola</div>
+  <h3 v-if="connectionProblem">Make sure you have MetaMask installed in the browser.</h3>
+  <button v-if="noConnection" v-on:click="connectWallet">Connect Wallet</button>
+  <h3 v-if="generalProblem">Unexpected error occurred.</h3>
   <div
     class="game-board"
     v-bind:class="{
@@ -11,8 +13,11 @@
         class="tile"
         v-for="index in 6"
         :key="index"
-        v-on:click="selected = index === selected ? 0 : index"
-        v-bind:class="{ selected: index === selected }"
+        v-on:click="select(index)"
+        v-bind:class="{
+          selected: index === selected,
+          disabled: noConnection || connectionProblem || generalProblem,
+        }"
       >
         <div>{{ index }}</div>
         <img src="../assets/chip.png" width="100" height="100" />
@@ -20,7 +25,12 @@
     </div>
 
     <div class="amount">
-      <input type="number" placeholder="Bet amount in ETH" v-model="amount" />
+      <input
+        type="number"
+        placeholder="Bet amount in ETH"
+        v-model="amount"
+        v-bind:disabled="noConnection || connectionProblem || generalProblem"
+      />
       <button
         v-on:click="placeBet"
         v-bind:disabled="!selected || !amount || amount <= 0"
@@ -83,17 +93,27 @@ export default class GameBoard extends Vue {
         method: "eth_accounts",
       });
       if (!accounts.length) {
-        console.log("No authorized account found");
+        this.noConnection = true;
       }
     });
   }
 
   async connectWallet(): Promise<void> {
     await this.ethConnect(async (ethereum) => {
-      await ethereum.request({
+      const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
+      if(accounts.length){
+        this.noConnection = false;
+      }
     });
+  }
+
+  select(index: number) {
+    if (this.noConnection || this.connectionProblem || this.generalProblem) {
+      return;
+    }
+    this.selected = index === this.selected ? 0 : index;
   }
 
   async placeBet(): Promise<void> {
@@ -158,7 +178,7 @@ export default class GameBoard extends Vue {
 
   private async ethCall(fn: (contract: ethers.Contract) => Promise<void>) {
     try {
-      this.ethConnect(async (ethereum) => {
+      await this.ethConnect(async (ethereum) => {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const luckContract = new ethers.Contract(
@@ -179,6 +199,9 @@ export default class GameBoard extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.game-board.locked {
+  opacity: 0.2;
+}
 .tiles {
   margin: 20px auto;
 
@@ -192,6 +215,9 @@ export default class GameBoard extends Vue {
 .tile {
   cursor: pointer;
   display: flex;
+}
+.tile.disabled {
+  cursor: default;
 }
 .tile:not(:nth-child(3n)) {
   border-right: 1px solid #f2e5bd;
@@ -208,7 +234,7 @@ img {
   margin: 15px 0;
   opacity: 0;
 }
-.tile:hover img {
+.tile:hover:not(.disabled) img {
   opacity: 0.3;
 }
 .tile.selected img {
