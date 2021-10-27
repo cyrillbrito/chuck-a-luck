@@ -1,15 +1,23 @@
-# Basic Sample Hardhat Project
+# Chuck A Luck with Ethereum 
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+This is a simple project I did while leaning the very basics of web3. I follow along the the course from [buildspace.so](https://buildspace.so/) and I was abbe to achieve this.
 
-Try running some of the following tasks:
+<div align="center">
+  <a href="https://chuck-a-luck.netlify.app/">
+    <img src="./preview.png" alt="Logo" >
+  </a>
+</div>
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
-```
+<br>
+
+## Chuck A Luck the game
+
+The game is very simple, the player chooses a number from 1-6 and set the bet amount in eth. After that 3 dices are rolled, depending on how many dices rolled the chosen number the bigger the prize. [Learn more here.](
+https://en.wikipedia.org/wiki/Chuck-a-luck)
+
+
+## Built With
+
+* HardHat
+* Vue
+* Netlify
