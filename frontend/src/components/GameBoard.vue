@@ -8,7 +8,7 @@
         v-on:click="selected = index === selected ? 0 : index"
         v-bind:class="{ selected: index === selected }"
       >
-        {{ index }}
+        <div>{{ index }}</div>
         <img src="../assets/chip.png" width="100" height="100" />
       </div>
     </div>
@@ -61,6 +61,8 @@ export default class GameBoard extends Vue {
   roll1 = 0;
   roll2 = 0;
   prize = -1;
+
+  contractAddess = '0xebB74Ec6615a968B355345b45Fd8F2cFB98A8f6E';
 
   mounted() {
     this.checkIfWalletIsConnected();
@@ -128,7 +130,7 @@ export default class GameBoard extends Vue {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(
-          "0xB08437441a5d0787Fd34d6bED12eCFd09e5c4803",
+          this.contractAddess,
           contract.abi,
           signer
         );
@@ -169,7 +171,7 @@ export default class GameBoard extends Vue {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(
-          "0xB08437441a5d0787Fd34d6bED12eCFd09e5c4803",
+          this.contractAddess,
           contract.abi,
           signer
         );
@@ -191,7 +193,7 @@ export default class GameBoard extends Vue {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(
-          "0xB08437441a5d0787Fd34d6bED12eCFd09e5c4803",
+          this.contractAddess,
           contract.abi,
           signer
         );
@@ -231,28 +233,36 @@ export default class GameBoard extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .tiles {
-  width: 90%;
-  margin: auto;
+  margin: 20px auto;
 
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, 145px);
+  grid-template-rows: repeat(2, 130px);
+  border: 2px solid #f2e5bd;
+  border-radius: 10px;
+  width: fit-content;
 }
 .tile {
-  border: 1px solid #f2e5bd;
-  width: 30%;
-  min-width: 256px;
-  height: 128px;
+  cursor: pointer;
+  display: flex;
+}
+.tile:not(:nth-child(3n)) {
+  border-right: 1px solid #f2e5bd;
+}
+.tile:not(:nth-child(n+4)){
+  border-bottom: 1px solid #f2e5bd;
+}
+.tile div {
+  margin: 10px 0 0 15px;
   font-family: Aladin;
   font-size: 40px;
-
-  cursor: pointer;
 }
 img {
+  margin: 15px 0;
   opacity: 0;
 }
 .tile:hover img {
-  opacity: 0.5;
+  opacity: 0.3;
 }
 .tile.selected img {
   opacity: 1;
