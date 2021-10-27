@@ -1,6 +1,6 @@
 # Chuck A Luck with Ethereum 
 
-This is a simple project I did while leaning the very basics of web3. I follow along the the course from [buildspace.so](https://buildspace.so/) and I was abbe to achieve this.
+This is a simple project I did while leaning the very basics of web3. I followed along with the course from [buildspace.so](https://buildspace.so/) and I was able to achieve this.
 
 <div align="center">
   <a href="https://chuck-a-luck.netlify.app/">
@@ -8,7 +8,6 @@ This is a simple project I did while leaning the very basics of web3. I follow a
   </a>
 </div>
 
-<br>
 
 ## Chuck A Luck the game
 
